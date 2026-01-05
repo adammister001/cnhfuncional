@@ -260,7 +260,7 @@ src="https://www.facebook.com/tr?id=1170542598573490&ev=PageView&noscript=1"/>
     .video-clean.show-controls::-webkit-media-controls-start-playback-button {
       display: block !important;
     }
-  </style><script src="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" id="vturb-smartplayer-js" fetchpriority="high"></script></head>
+  </style></head>
 <body>
   <div id="root"><div role="region" aria-label="Notifications (F8)" tabindex="-1" style="pointer-events: none;"><ol tabindex="-1" class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"></ol></div><div>
   <div class="bg-white text-black">
@@ -305,9 +305,208 @@ src="https://www.facebook.com/tr?id=1170542598573490&ev=PageView&noscript=1"/>
     <!-- Video -->
     <div class="px-4 mb-2" data-testid="video-container">
       <div class="w-full overflow-hidden" style="max-width: 100%;">
-        <div id="smartplayer-container">
-          <script type="text/javascript"> var s=document.createElement("script"); s.src="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/sdk.js", s.async=!0,document.head.appendChild(s); </script> <div id="ifr_6951bdd484040898eb11aac6_wrapper" style="margin: 0 auto; width: 100%; "> <div style="position: relative; padding: 56.25% 0 0 0;" id="ifr_6951bdd484040898eb11aac6_aspect"> <iframe frameborder="0" allowfullscreen src="about:blank" id="ifr_6951bdd484040898eb11aac6" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" referrerpolicy="origin" onload=" this.onload=null, this.src='https://scripts.converteai.net/fc263f88-2f7f-4905-bd82-e268d996b6db/players/6951bdd484040898eb11aac6/v4/embed.html' +(window.__INITIAL_LOCATION_SEARCH||location.search||'?') +'&vl=' +encodeURIComponent(window.__INITIAL_LOCATION_HREF||location.href)"></iframe> </div> </div>
+        <div id="custom-video-player" style="position: relative; width: 100%; background: #000;">
+          <video
+            id="main-video"
+            playsinline
+            preload="metadata"
+            poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect fill='%23000' width='16' height='9'/%3E%3C/svg%3E"
+            style="width: 100%; height: auto; display: block;"
+          >
+            <source src="/video.mp4" type="video/mp4">
+            Seu navegador não suporta o elemento de vídeo.
+          </video>
+
+          <!-- Botão de Play Overlay -->
+          <div id="play-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.5); cursor: pointer; transition: opacity 0.3s;">
+            <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" style="margin-left: 3px;">
+                <path d="M8 5v14l11-7L8 5z" fill="#000"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Controles customizados -->
+          <div id="video-controls" style="position: absolute; bottom: 0; left: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); padding: 15px 10px 10px; opacity: 0; transition: opacity 0.3s;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <button id="play-pause-btn" style="background: none; border: none; color: white; cursor: pointer; padding: 5px;">
+                <svg id="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="white">
+                  <path d="M8 5v14l11-7L8 5z"/>
+                </svg>
+                <svg id="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="white" style="display: none;">
+                  <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                </svg>
+              </button>
+
+              <div style="flex: 1; height: 4px; background: rgba(255,255,255,0.3); border-radius: 2px; cursor: pointer; position: relative;" id="progress-bar">
+                <div id="progress-filled" style="height: 100%; background: #c00; border-radius: 2px; width: 0%; transition: width 0.1s;"></div>
+              </div>
+
+              <span id="time-display" style="color: white; font-size: 12px; min-width: 45px; text-align: right;">0:00</span>
+
+              <button id="mute-btn" style="background: none; border: none; color: white; cursor: pointer; padding: 5px;">
+                <svg id="volume-icon" width="24" height="24" viewBox="0 0 24 24" fill="white">
+                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                </svg>
+                <svg id="mute-icon" width="24" height="24" viewBox="0 0 24 24" fill="white" style="display: none;">
+                  <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                </svg>
+              </button>
+
+              <button id="fullscreen-btn" style="background: none; border: none; color: white; cursor: pointer; padding: 5px;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+                  <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
+
+        <script>
+          (function() {
+            const video = document.getElementById('main-video');
+            const playOverlay = document.getElementById('play-overlay');
+            const controls = document.getElementById('video-controls');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const playIcon = document.getElementById('play-icon');
+            const pauseIcon = document.getElementById('pause-icon');
+            const progressBar = document.getElementById('progress-bar');
+            const progressFilled = document.getElementById('progress-filled');
+            const timeDisplay = document.getElementById('time-display');
+            const muteBtn = document.getElementById('mute-btn');
+            const volumeIcon = document.getElementById('volume-icon');
+            const muteIcon = document.getElementById('mute-icon');
+            const fullscreenBtn = document.getElementById('fullscreen-btn');
+            const playerContainer = document.getElementById('custom-video-player');
+
+            let controlsTimeout;
+            let isPlaying = false;
+
+            // Função para formatar tempo
+            function formatTime(seconds) {
+              const mins = Math.floor(seconds / 60);
+              const secs = Math.floor(seconds % 60);
+              return mins + ':' + (secs < 10 ? '0' : '') + secs;
+            }
+
+            // Play/Pause via overlay
+            playOverlay.addEventListener('click', function() {
+              video.play();
+              playOverlay.style.opacity = '0';
+              setTimeout(() => {
+                playOverlay.style.display = 'none';
+              }, 300);
+              isPlaying = true;
+              updatePlayPauseIcon();
+            });
+
+            // Play/Pause button
+            playPauseBtn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              if (video.paused) {
+                video.play();
+                isPlaying = true;
+              } else {
+                video.pause();
+                isPlaying = false;
+              }
+              updatePlayPauseIcon();
+            });
+
+            function updatePlayPauseIcon() {
+              if (isPlaying) {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+              } else {
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+              }
+            }
+
+            // Atualizar progresso
+            video.addEventListener('timeupdate', function() {
+              const percent = (video.currentTime / video.duration) * 100;
+              progressFilled.style.width = percent + '%';
+              timeDisplay.textContent = formatTime(video.currentTime);
+            });
+
+            // Seek no vídeo
+            progressBar.addEventListener('click', function(e) {
+              const rect = progressBar.getBoundingClientRect();
+              const pos = (e.clientX - rect.left) / rect.width;
+              video.currentTime = pos * video.duration;
+            });
+
+            // Mute/Unmute
+            muteBtn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              video.muted = !video.muted;
+              if (video.muted) {
+                volumeIcon.style.display = 'none';
+                muteIcon.style.display = 'block';
+              } else {
+                volumeIcon.style.display = 'block';
+                muteIcon.style.display = 'none';
+              }
+            });
+
+            // Fullscreen
+            fullscreenBtn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              if (!document.fullscreenElement) {
+                if (playerContainer.requestFullscreen) {
+                  playerContainer.requestFullscreen();
+                } else if (playerContainer.webkitRequestFullscreen) {
+                  playerContainer.webkitRequestFullscreen();
+                } else if (playerContainer.mozRequestFullScreen) {
+                  playerContainer.mozRequestFullScreen();
+                } else if (playerContainer.msRequestFullscreen) {
+                  playerContainer.msRequestFullscreen();
+                }
+              } else {
+                if (document.exitFullscreen) {
+                  document.exitFullscreen();
+                }
+              }
+            });
+
+            // Mostrar controles ao passar mouse ou tocar
+            function showControls() {
+              controls.style.opacity = '1';
+              clearTimeout(controlsTimeout);
+              if (isPlaying) {
+                controlsTimeout = setTimeout(() => {
+                  controls.style.opacity = '0';
+                }, 3000);
+              }
+            }
+
+            playerContainer.addEventListener('mousemove', showControls);
+            playerContainer.addEventListener('touchstart', showControls);
+            playerContainer.addEventListener('click', function(e) {
+              if (e.target === video || e.target === playerContainer) {
+                showControls();
+              }
+            });
+
+            // Pausar quando vídeo termina
+            video.addEventListener('ended', function() {
+              isPlaying = false;
+              updatePlayPauseIcon();
+              controls.style.opacity = '1';
+            });
+
+            // Mostrar controles quando pausado
+            video.addEventListener('pause', function() {
+              controls.style.opacity = '1';
+              clearTimeout(controlsTimeout);
+            });
+
+            video.addEventListener('play', function() {
+              showControls();
+            });
+          })();
+        </script>
       </div>
     </div>
     <!-- Share Button -->
